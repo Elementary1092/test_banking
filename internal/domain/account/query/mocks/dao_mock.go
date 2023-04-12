@@ -50,47 +50,17 @@ func (mr *MockReadDAOMockRecorder) FindAccount(ctx, params interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAccount", reflect.TypeOf((*MockReadDAO)(nil).FindAccount), ctx, params)
 }
 
-// FindAllTransactions mocks base method.
-func (m *MockReadDAO) FindAllTransactions(ctx context.Context, accountNumber string) (*model.Account, error) {
+// FindTransactions mocks base method.
+func (m *MockReadDAO) FindTransactions(ctx context.Context, accountNumber string) (*model.Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindAllTransactions", ctx, accountNumber)
+	ret := m.ctrl.Call(m, "FindTransactions", ctx, accountNumber)
 	ret0, _ := ret[0].(*model.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// FindAllTransactions indicates an expected call of FindAllTransactions.
-func (mr *MockReadDAOMockRecorder) FindAllTransactions(ctx, accountNumber interface{}) *gomock.Call {
+// FindTransactions indicates an expected call of FindTransactions.
+func (mr *MockReadDAOMockRecorder) FindTransactions(ctx, accountNumber interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllTransactions", reflect.TypeOf((*MockReadDAO)(nil).FindAllTransactions), ctx, accountNumber)
-}
-
-// FindInTransactions mocks base method.
-func (m *MockReadDAO) FindInTransactions(ctx context.Context, accountNumber string) (*model.Account, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindInTransactions", ctx, accountNumber)
-	ret0, _ := ret[0].(*model.Account)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindInTransactions indicates an expected call of FindInTransactions.
-func (mr *MockReadDAOMockRecorder) FindInTransactions(ctx, accountNumber interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindInTransactions", reflect.TypeOf((*MockReadDAO)(nil).FindInTransactions), ctx, accountNumber)
-}
-
-// FindOutTransactions mocks base method.
-func (m *MockReadDAO) FindOutTransactions(ctx context.Context, accountNumber string) (*model.Account, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindOutTransactions", ctx, accountNumber)
-	ret0, _ := ret[0].(*model.Account)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindOutTransactions indicates an expected call of FindOutTransactions.
-func (mr *MockReadDAOMockRecorder) FindOutTransactions(ctx, accountNumber interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOutTransactions", reflect.TypeOf((*MockReadDAO)(nil).FindOutTransactions), ctx, accountNumber)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindTransactions", reflect.TypeOf((*MockReadDAO)(nil).FindTransactions), ctx, accountNumber)
 }
