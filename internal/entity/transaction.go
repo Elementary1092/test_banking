@@ -1,47 +1,48 @@
 package entity
 
 import (
-    "errors"
-    "time"
+	"errors"
+	"time"
 )
 
 var (
-    ErrInvalidAmount = errors.New("provided amount is invalid")
+	ErrInvalidAmount = errors.New("provided amount is invalid")
 )
 
 // Transaction is immutable representation of a transaction between customers
 type Transaction struct {
-    at     time.Time
-    amount float64
-    from   string
-    to     string
+	at       time.Time
+	currency string
+	from     string
+	to       string
+	amount   float64
 }
 
 func NewTransaction(from, to string, amount float64, at time.Time) (*Transaction, error) {
-    if amount < 0 {
-        return nil, ErrInvalidAmount
-    }
+	if amount < 0 {
+		return nil, ErrInvalidAmount
+	}
 
-    return &Transaction{
-        at:     at,
-        amount: amount,
-        from:   from,
-        to:     to,
-    }, nil
+	return &Transaction{
+		at:     at,
+		amount: amount,
+		from:   from,
+		to:     to,
+	}, nil
 }
 
 func (t *Transaction) From() string {
-    return t.from
+	return t.from
 }
 
 func (t *Transaction) To() string {
-    return t.to
+	return t.to
 }
 
 func (t *Transaction) PerformedAt() time.Time {
-    return t.at
+	return t.at
 }
 
 func (t *Transaction) Amount() float64 {
-    return t.amount
+	return t.amount
 }
