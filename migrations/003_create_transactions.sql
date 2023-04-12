@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS "transactions" (
+    "id" SERIAL PRIMARY KEY,
+    "from" VARCHAR(50) NOT NULL,
+    "to" VARCHAR(50) NOT NULL,
+    "type" VARCHAR(20) NOT NULL,
+    "currency" VARCHAR(5) NOT NULL,
+    "amount" NUMERIC(20, 2) NOT NULL,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
