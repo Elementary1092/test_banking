@@ -3,18 +3,25 @@ package model
 import (
 	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 	"github.com/Elementary1092/test_banking/internal/entity"
+	"time"
 )
 
 type Account struct {
-	account *entity.Account
-
 	userID string
+
+	createdAt time.Time
+
+	account *entity.Account
 
 	// account write model may work only with 1 transaction at a time
 	transaction *entity.Transaction
 }
 
-func NewWriteAccount(accountNumber, currency, userID string, balance float64, transaction *entity.Transaction) (*Account, error) {
+func NewWriteAccount(
+	accountNumber, currency, userID string,
+	balance float64,
+	transaction *entity.Transaction,
+	createdAt time.Time) (*Account, error) {
 	if accountNumber == "" || currency == "" || userID == "" {
 		return nil, errResponses.ErrInvalidAccountInfo
 	}
@@ -28,6 +35,7 @@ func NewWriteAccount(accountNumber, currency, userID string, balance float64, tr
 			Currency: currency,
 			Balance:  balance,
 		},
+		createdAt:   createdAt,
 		userID:      userID,
 		transaction: transaction,
 	}, nil
@@ -51,4 +59,8 @@ func (a *Account) Balance() float64 {
 
 func (a *Account) Transaction() *entity.Transaction {
 	return a.transaction
+}
+
+func (a *Account) CreatedAt() time.Time {
+	return a.createdAt
 }
