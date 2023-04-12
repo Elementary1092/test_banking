@@ -3,6 +3,7 @@ package create
 import (
 	"context"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command"
+	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command/model"
 )
 
@@ -23,7 +24,7 @@ func NewCreateHandler(repo command.WriteDAO) *Handler {
 func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 	accountNumber, err := generateAccountNumber(cmd.Currency)
 	if err != nil {
-		return err
+		return errResponses.NewInternal("account/command/create.Handle", err)
 	}
 
 	account, err := model.NewWriteAccount(accountNumber, cmd.Currency, cmd.UserID, 0, nil)

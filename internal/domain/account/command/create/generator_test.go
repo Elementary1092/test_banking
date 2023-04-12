@@ -2,6 +2,7 @@ package create
 
 import (
 	"errors"
+	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 	"testing"
 )
 
@@ -9,7 +10,7 @@ func TestAccountNumberGenerator(t *testing.T) {
 	tests := map[string]error{
 		"UZS": nil,
 		"USD": nil,
-		"":    errInvalidCurrencyValue,
+		"":    errResponses.ErrInvalidCurrency,
 	}
 
 	for currency, expectedErr := range tests {

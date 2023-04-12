@@ -2,15 +2,11 @@ package replenish
 
 import (
 	"context"
-	"errors"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command"
+	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command/model"
 	"github.com/Elementary1092/test_banking/internal/entity"
 	"time"
-)
-
-var (
-	ErrInvalidReplenishAmount = errors.New("replenish amount cannot be less than 0")
 )
 
 type Handler struct {
@@ -29,7 +25,7 @@ func NewHandler(repo command.WriteDAO) *Handler {
 
 func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 	if cmd.Amount < 0 {
-		return ErrInvalidReplenishAmount
+		return errResponses.ErrInvalidTransactionAmount
 	}
 
 	updateModel, err := model.NewUpdateAccount(

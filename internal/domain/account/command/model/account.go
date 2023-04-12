@@ -1,13 +1,8 @@
 package model
 
 import (
-	"errors"
+	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 	"github.com/Elementary1092/test_banking/internal/entity"
-)
-
-var (
-	ErrInvalidAccountInformation = errors.New("invalid account number")
-	ErrInvalidBalanceInformation = errors.New("invalid account balance information")
 )
 
 type Account struct {
@@ -21,10 +16,10 @@ type Account struct {
 
 func NewWriteAccount(accountNumber, currency, userID string, balance float64, transaction *entity.Transaction) (*Account, error) {
 	if accountNumber == "" || currency == "" || userID == "" {
-		return nil, ErrInvalidAccountInformation
+		return nil, errResponses.ErrInvalidAccountInfo
 	}
 	if balance < 0 {
-		return nil, ErrInvalidBalanceInformation
+		return nil, errResponses.ErrInvalidBalanceInfo
 	}
 
 	return &Account{

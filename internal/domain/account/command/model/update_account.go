@@ -1,14 +1,9 @@
 package model
 
 import (
-	"errors"
+	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 	"github.com/Elementary1092/test_banking/internal/entity"
 	"time"
-)
-
-var (
-	ErrInvalidUpdateParameters  = errors.New("invalid update parameters")
-	ErrInvalidTransactionAmount = errors.New("invalid transaction amount")
 )
 
 type UpdateAccount struct {
@@ -21,11 +16,11 @@ type UpdateAccount struct {
 
 func NewUpdateAccount(to, from string, tType entity.TransactionType, amount float64, at time.Time) (*UpdateAccount, error) {
 	if to == "" || from == "" {
-		return nil, ErrInvalidUpdateParameters
+		return nil, errResponses.ErrInvalidUpdateParameters
 	}
 
 	if amount < 0 {
-		return nil, ErrInvalidTransactionAmount
+		return nil, errResponses.ErrInvalidTransactionAmount
 	}
 
 	return &UpdateAccount{

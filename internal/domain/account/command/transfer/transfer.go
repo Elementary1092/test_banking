@@ -2,17 +2,11 @@ package transfer
 
 import (
 	"context"
-	"errors"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command"
+	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command/model"
 	"github.com/Elementary1092/test_banking/internal/entity"
 	"time"
-)
-
-var (
-	ErrInvalidAmount            = errors.New("invalid amount")
-	ErrInsufficientFunds        = errors.New("insufficient balance")
-	ErrInvalidRecipientCurrency = errors.New("recipient's account currency is different")
 )
 
 type Handler struct {
@@ -31,7 +25,7 @@ func NewHandler(repo command.WriteDAO) *Handler {
 
 func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 	if cmd.Amount < 0 {
-		return ErrInvalidAmount
+		return errResponses.ErrInvalidTransactionAmount
 	}
 	fromAccount, err := h.repo.FindAccount(ctx, map[string]string{
 		"account_number": cmd.From,
@@ -48,11 +42,11 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 	}
 
 	if toAccount.Currency() != fromAccount.Currency() {
-		return ErrInvalidRecipientCurrency
+		return errResponses.ErrInvalidRecipientCurrency
 	}
 
 	if fromAccount.Balance() < cmd.Amount {
-		return ErrInsufficientFunds
+		return errResponses.ErrInsufficientFunds
 	}
 
 	updatedFrom, err := model.NewUpdateAccount(cmd.To, cmd.From, entity.TransferType, cmd.Amount, time.Now())

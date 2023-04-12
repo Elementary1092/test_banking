@@ -3,8 +3,8 @@ package create
 import (
 	"crypto/rand"
 	"encoding/hex"
-	"errors"
 	"fmt"
+	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 )
 
 const (
@@ -12,14 +12,9 @@ const (
 	expectedNumericAccountNumberLen = 20
 )
 
-var (
-	errFailedToGenerateSufficientNumber = errors.New("internal error occurred during account number generation")
-	errInvalidCurrencyValue             = errors.New("invalid currency value was provided")
-)
-
 func generateAccountNumber(currency string) (string, error) {
 	if currency == "" {
-		return "", errInvalidCurrencyValue
+		return "", errResponses.ErrInvalidCurrency
 	}
 
 	// Yeah, it is not the best solution to create account number using crypto/rand.Read
@@ -29,9 +24,9 @@ func generateAccountNumber(currency string) (string, error) {
 	accountNumberBuf := make([]byte, accountNumberBufLen)
 
 	if n, err := rand.Read(accountNumberBuf); err != nil {
-		return "", err
+		return "", errResponses.NewInternal("crypto/rand.Read", err)
 	} else if n != accountNumberBufLen {
-		return "", errFailedToGenerateSufficientNumber
+		return "", errResponses.ErrFailedToGenAccNumber
 	}
 
 	accountNumber := hex.EncodeToString(accountNumberBuf)

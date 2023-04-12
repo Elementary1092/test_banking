@@ -8,8 +8,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	command "github.com/Elementary1092/test_banking/internal/domain/account/command"
 	model "github.com/Elementary1092/test_banking/internal/domain/account/command/model"
+	entity "github.com/Elementary1092/test_banking/internal/entity"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -66,7 +66,7 @@ func (mr *MockWriteDAOMockRecorder) FindAccount(ctx, params interface{}) *gomock
 }
 
 // UpdateAccount mocks base method.
-func (m *MockWriteDAO) UpdateAccount(ctx context.Context, updateReq *model.UpdateAccount, t command.UpdateType) error {
+func (m *MockWriteDAO) UpdateAccount(ctx context.Context, updateReq *model.UpdateAccount, t entity.AppAccount) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAccount", ctx, updateReq, t)
 	ret0, _ := ret[0].(error)
