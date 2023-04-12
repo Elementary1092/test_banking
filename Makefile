@@ -4,8 +4,10 @@ MAIN_FILE=$(PROJ_DIR)/cmd/main.go
 
 mocks_gen:
 	mkdir -p "$(PROJ_DIR)/internal/domain/customer/command/mocks/"
-	touch $(PROJ_DIR)/internal/domain/customer/command/mocks/mocks.go
-	mockgen -source=$(PROJ_DIR)/internal/domain/customer/command/dao.go -destination=$(PROJ_DIR)/internal/domain/customer/command/mocks/mocks.go -package=mocks
+	mockgen -source=$(PROJ_DIR)/internal/domain/customer/command/dao.go -destination=$(PROJ_DIR)/internal/domain/customer/command/mocks/dao_mock.go -package=mocks
 	mkdir -p "$(PROJ_DIR)/internal/domain/customer/query/mocks/"
-	touch $(PROJ_DIR)/internal/domain/customer/query/mocks/mocks.go
-	mockgen -source=$(PROJ_DIR)/internal/domain/customer/query/dao.go -destination=$(PROJ_DIR)/internal/domain/customer/query/mocks/mocks.go -package=mocks
+	mockgen -source=$(PROJ_DIR)/internal/domain/customer/query/dao.go -destination=$(PROJ_DIR)/internal/domain/customer/query/mocks/dao_mock.go -package=mocks
+	mkdir -p "$(PROJ_DIR)/internal/domain/account/query/mocks/"
+	mockgen -source=$(PROJ_DIR)/internal/domain/account/query/dao.go -destination=$(PROJ_DIR)/internal/domain/account/query/mocks/dao_mock.go -package=mocks
+	mkdir -p "$(PROJ_DIR)/internal/domain/account/command/mocks/"
+	mockgen -source=$(PROJ_DIR)/internal/domain/account/command/dao.go -destination=$(PROJ_DIR)/internal/domain/account/command/mocks/dao_mock.go -package=mocks
