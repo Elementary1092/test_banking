@@ -17,6 +17,15 @@ const (
 	TransferType  TransactionType = "transfer"
 )
 
+// AppAccount is used to indicate which account is registered in app
+type AppAccount uint8
+
+const (
+	ToAccount AppAccount = iota
+	FromAccount
+	BothAccounts
+)
+
 // Transaction is immutable representation of a transaction between customers
 type Transaction struct {
 	at       time.Time

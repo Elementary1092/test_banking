@@ -3,14 +3,7 @@ package command
 import (
 	"context"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command/model"
-)
-
-type UpdateType uint32
-
-const (
-	UpdateOnlyToAccount UpdateType = iota
-	UpdateOnlyFromAccount
-	UpdateBothAccounts
+	"github.com/Elementary1092/test_banking/internal/entity"
 )
 
 type WriteDAO interface {
@@ -20,5 +13,5 @@ type WriteDAO interface {
 	CreateAccount(ctx context.Context, account *model.Account) error
 	// UpdateAccount should make update according to update type in 1 transaction
 	// Only Balance is updatable.
-	UpdateAccount(ctx context.Context, updateReq *model.UpdateAccount, t UpdateType) error
+	UpdateAccount(ctx context.Context, updateReq *model.UpdateAccount, t entity.AppAccount) error
 }

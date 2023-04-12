@@ -42,5 +42,5 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 		return err
 	}
 
-	return h.repo.UpdateAccount(ctx, updateModel, command.UpdateOnlyToAccount)
+	return h.repo.UpdateAccount(ctx, updateModel, entity.ToAccount)
 }
