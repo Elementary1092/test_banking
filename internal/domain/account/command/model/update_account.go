@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"github.com/Elementary1092/test_banking/internal/entity"
+	"time"
 )
 
 var (
@@ -11,15 +12,15 @@ var (
 )
 
 type UpdateAccount struct {
+	at                time.Time
 	to                string
 	from              string
 	tType             entity.TransactionType
 	transactionAmount float64
-	currency          string
 }
 
-func NewUpdateAccount(to, from, currency string, tType entity.TransactionType, amount float64) (*UpdateAccount, error) {
-	if to == "" || from == "" || currency == "" {
+func NewUpdateAccount(to, from string, tType entity.TransactionType, amount float64, at time.Time) (*UpdateAccount, error) {
+	if to == "" || from == "" {
 		return nil, ErrInvalidUpdateParameters
 	}
 
@@ -28,11 +29,11 @@ func NewUpdateAccount(to, from, currency string, tType entity.TransactionType, a
 	}
 
 	return &UpdateAccount{
+		at:                at,
 		to:                to,
 		from:              from,
 		tType:             tType,
 		transactionAmount: amount,
-		currency:          currency,
 	}, nil
 }
 
@@ -46,10 +47,6 @@ func (u *UpdateAccount) From() string {
 
 func (u *UpdateAccount) TransactionType() string {
 	return string(u.tType)
-}
-
-func (u *UpdateAccount) Currency() string {
-	return u.currency
 }
 
 func (u *UpdateAccount) Amount() float64 {

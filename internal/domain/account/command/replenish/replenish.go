@@ -6,6 +6,7 @@ import (
 	"github.com/Elementary1092/test_banking/internal/domain/account/command"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command/model"
 	"github.com/Elementary1092/test_banking/internal/entity"
+	"time"
 )
 
 var (
@@ -34,8 +35,9 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 	updateModel, err := model.NewUpdateAccount(
 		cmd.AccountNumber,
 		cmd.FromCard,
-		cmd.Currency,
-		entity.ReplenishType, cmd.Amount)
+		entity.ReplenishType,
+		cmd.Amount,
+		time.Now())
 	if err != nil {
 		return err
 	}
