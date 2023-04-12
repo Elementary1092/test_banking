@@ -8,6 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	command "github.com/Elementary1092/test_banking/internal/domain/account/command"
 	model "github.com/Elementary1092/test_banking/internal/domain/account/command/model"
 	gomock "github.com/golang/mock/gomock"
 )
@@ -35,20 +36,6 @@ func (m *MockWriteDAO) EXPECT() *MockWriteDAOMockRecorder {
 	return m.recorder
 }
 
-// AddAccountTransaction mocks base method.
-func (m *MockWriteDAO) AddAccountTransaction(ctx context.Context, account *model.Account) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddAccountTransaction", ctx, account)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// AddAccountTransaction indicates an expected call of AddAccountTransaction.
-func (mr *MockWriteDAOMockRecorder) AddAccountTransaction(ctx, account interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddAccountTransaction", reflect.TypeOf((*MockWriteDAO)(nil).AddAccountTransaction), ctx, account)
-}
-
 // CreateAccount mocks base method.
 func (m *MockWriteDAO) CreateAccount(ctx context.Context, account *model.Account) error {
 	m.ctrl.T.Helper()
@@ -63,30 +50,31 @@ func (mr *MockWriteDAOMockRecorder) CreateAccount(ctx, account interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockWriteDAO)(nil).CreateAccount), ctx, account)
 }
 
-// Exists mocks base method.
-func (m *MockWriteDAO) Exists(ctx context.Context, accountNumber string) error {
+// FindAccount mocks base method.
+func (m *MockWriteDAO) FindAccount(ctx context.Context, params map[string]string) (*model.Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Exists", ctx, accountNumber)
+	ret := m.ctrl.Call(m, "FindAccount", ctx, params)
+	ret0, _ := ret[0].(*model.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindAccount indicates an expected call of FindAccount.
+func (mr *MockWriteDAOMockRecorder) FindAccount(ctx, params interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAccount", reflect.TypeOf((*MockWriteDAO)(nil).FindAccount), ctx, params)
+}
+
+// UpdateAccount mocks base method.
+func (m *MockWriteDAO) UpdateAccount(ctx context.Context, updateReq *model.UpdateAccount, t command.UpdateType) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAccount", ctx, updateReq, t)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Exists indicates an expected call of Exists.
-func (mr *MockWriteDAOMockRecorder) Exists(ctx, accountNumber interface{}) *gomock.Call {
+// UpdateAccount indicates an expected call of UpdateAccount.
+func (mr *MockWriteDAOMockRecorder) UpdateAccount(ctx, updateReq, t interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exists", reflect.TypeOf((*MockWriteDAO)(nil).Exists), ctx, accountNumber)
-}
-
-// UpdateBalance mocks base method.
-func (m *MockWriteDAO) UpdateBalance(ctx context.Context, accountNumber string, balance float64) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateBalance", ctx, accountNumber, balance)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateBalance indicates an expected call of UpdateBalance.
-func (mr *MockWriteDAOMockRecorder) UpdateBalance(ctx, accountNumber, balance interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBalance", reflect.TypeOf((*MockWriteDAO)(nil).UpdateBalance), ctx, accountNumber, balance)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockWriteDAO)(nil).UpdateAccount), ctx, updateReq, t)
 }
