@@ -2,7 +2,6 @@ package create
 
 import (
 	"context"
-	"encoding/hex"
 	"github.com/Elementary1092/test_banking/internal/domain/customer/command"
 	"github.com/Elementary1092/test_banking/internal/domain/customer/command/model"
 	"github.com/Elementary1092/test_banking/pkg/hasher"
@@ -29,9 +28,8 @@ func (c *Handler) Handle(ctx context.Context, command Customer) error {
 	if err != nil {
 		return err
 	}
-	hexHash := hex.EncodeToString(hashedPassword)
 
-	customer, err := model.NewWriteModel(uuid.New().String(), command.Email, hexHash, time.Now())
+	customer, err := model.NewWriteModel(uuid.New().String(), command.Email, hashedPassword, time.Now())
 	if err != nil {
 		return err
 	}

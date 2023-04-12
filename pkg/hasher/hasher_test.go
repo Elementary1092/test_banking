@@ -6,13 +6,13 @@ import (
 	"testing"
 )
 
-func defaultResultChecker(password string) func([]byte, error) error {
-	return func(result []byte, err error) error {
+func defaultResultChecker(password string) func(string, error) error {
+	return func(result string, err error) error {
 		if err != nil {
 			errMsg := fmt.Sprintf("unexpected error on '%s': %v", password, err)
 			return errors.New(errMsg)
 		}
-		if result == nil || len(result) < saltLength+hashLen {
+		if len(result) < saltLength+hashLen {
 			errMsg := fmt.Sprintf("invalid hash on '%s'", password)
 			return errors.New(errMsg)
 		}
@@ -21,8 +21,8 @@ func defaultResultChecker(password string) func([]byte, error) error {
 	}
 }
 
-func defaultErrorChecker(password string, desiredError error) func([]byte, error) error {
-	return func(result []byte, err error) error {
+func defaultErrorChecker(password string, desiredError error) func(string, error) error {
+	return func(result string, err error) error {
 		if !errors.Is(err, desiredError) {
 			errMsg := fmt.Sprintf("failed on: %s; expected: %v, got: %v", password, desiredError, err)
 			return errors.New(errMsg)
@@ -33,7 +33,7 @@ func defaultErrorChecker(password string, desiredError error) func([]byte, error
 }
 
 func TestHash(t *testing.T) {
-	tests := map[string]func(result []byte, err error) error{
+	tests := map[string]func(string, error) error{
 		"some_password":             defaultResultChecker("some_password"),
 		"":                          defaultErrorChecker("", ErrNoPassword),
 		"1":                         defaultResultChecker("1"),
@@ -63,13 +63,13 @@ func TestVerify(t *testing.T) {
 	for password, desc := range tests {
 		hash, err := Hash(password)
 		errHashChecker := defaultErrorChecker(password, desc.expectedHashErr)
-		if err = errHashChecker(nil, err); err != nil {
+		if err = errHashChecker("", err); err != nil {
 			t.Error(err)
 		}
 
 		err = Verify(hash, desc.compareWith)
 		errVerifyChecker := defaultErrorChecker(password, desc.expectedVerifyErr)
-		if err = errVerifyChecker(nil, err); err != nil {
+		if err = errVerifyChecker("", err); err != nil {
 			t.Error(err)
 		}
 	}

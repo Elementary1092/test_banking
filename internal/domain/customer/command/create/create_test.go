@@ -2,7 +2,6 @@ package create
 
 import (
 	"context"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/Elementary1092/test_banking/internal/domain/customer/command/mocks"
@@ -55,12 +54,10 @@ func TestHandlerHandle(t *testing.T) {
 					return errInvalidPassword
 				}
 
-				hashedPassword, err := hex.DecodeString(customer.Password())
-				if err != nil {
-					return err
-				}
+				hashedPassword := customer.Password()
 
-				if err = hasher.Verify(hashedPassword, tt.cmd.Password); err != nil {
+				if err := hasher.Verify(hashedPassword, tt.cmd.Password); err != nil {
+					t.Log("")
 					return err
 				}
 
