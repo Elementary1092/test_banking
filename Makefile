@@ -1,5 +1,5 @@
 PROJ_DIR=$(PWD)
-BUILD_DIR=$(PROJ_DIR)/_build
+BUILD_DIR=$(PROJ_DIR)/build
 MAIN_FILE=cmd/main.go
 
 include .env
@@ -26,3 +26,7 @@ api_swagger:
 .PHONY: run
 run:
 	go run $(MAIN_FILE)
+
+.PHONY: build
+build:
+	go build -o $(BUILD_DIR)/app $(MAIN_FILE)
