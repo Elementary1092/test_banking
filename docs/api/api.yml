@@ -149,8 +149,8 @@ paths:
 
   /customer/accounts:
     post:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountCreate
       requestBody:
         required: true
@@ -182,8 +182,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     get:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: CustomerAccounts
       responses:
         '200':
@@ -216,8 +216,8 @@ paths:
 
   /customer/accounts/{account_number}:
     get:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountGet
       parameters:
         - in: path
@@ -256,8 +256,8 @@ paths:
 
   /customer/accounts/{account_number}/replenish:
     post:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountReplenish
       parameters:
         - in: path
@@ -298,8 +298,8 @@ paths:
 
   /customer/accounts/{account_number}/withdraw:
     post:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountWithdraw
       parameters:
         - in: path
@@ -340,8 +340,8 @@ paths:
 
   /customer/accounts/{account_number}/transfer:
     post:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountTransfer
       parameters:
         - in: path

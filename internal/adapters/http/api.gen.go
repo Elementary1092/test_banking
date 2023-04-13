@@ -76,6 +76,8 @@ func (siw *ServerInterfaceWrapper) CustomerInfo(w http.ResponseWriter, r *http.R
 func (siw *ServerInterfaceWrapper) CustomerAccounts(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{""})
+
 	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.CustomerAccounts(w, r)
 	})
@@ -90,6 +92,8 @@ func (siw *ServerInterfaceWrapper) CustomerAccounts(w http.ResponseWriter, r *ht
 // AccountCreate operation middleware
 func (siw *ServerInterfaceWrapper) AccountCreate(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{""})
 
 	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.AccountCreate(w, r)
@@ -117,6 +121,8 @@ func (siw *ServerInterfaceWrapper) AccountGet(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{""})
+
 	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.AccountGet(w, r, accountNumber)
 	})
@@ -142,6 +148,8 @@ func (siw *ServerInterfaceWrapper) AccountReplenish(w http.ResponseWriter, r *ht
 		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "account_number", Err: err})
 		return
 	}
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{""})
 
 	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.AccountReplenish(w, r, accountNumber)
@@ -169,6 +177,8 @@ func (siw *ServerInterfaceWrapper) AccountTransfer(w http.ResponseWriter, r *htt
 		return
 	}
 
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{""})
+
 	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.AccountTransfer(w, r, accountNumber)
 	})
@@ -194,6 +204,8 @@ func (siw *ServerInterfaceWrapper) AccountWithdraw(w http.ResponseWriter, r *htt
 		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "account_number", Err: err})
 		return
 	}
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{""})
 
 	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.AccountWithdraw(w, r, accountNumber)
