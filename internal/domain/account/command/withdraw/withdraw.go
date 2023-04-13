@@ -38,10 +38,17 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 		return errResponses.ErrInsufficientFunds
 	}
 
-	updatedFrom, err := model.NewUpdateAccount(cmd.To, cmd.From, entity.WithdrawType, cmd.Amount, time.Now())
+	updatedFrom, err := model.NewUpdateAccount(
+		cmd.To,
+		cmd.From,
+		fromAccount.Currency(),
+		entity.WithdrawType,
+		cmd.Amount,
+		time.Now(),
+	)
 	if err != nil {
 		return err
 	}
 
-	return h.repo.UpdateAccount(ctx, updatedFrom, entity.FromAccount)
+	return h.repo.AddTransaction(ctx, updatedFrom, entity.FromAccount)
 }

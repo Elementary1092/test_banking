@@ -10,11 +10,12 @@ type UpdateAccount struct {
 	at                time.Time
 	to                string
 	from              string
+	currency          string
 	tType             entity.TransactionType
 	transactionAmount float64
 }
 
-func NewUpdateAccount(to, from string, tType entity.TransactionType, amount float64, at time.Time) (*UpdateAccount, error) {
+func NewUpdateAccount(to, from, currency string, tType entity.TransactionType, amount float64, at time.Time) (*UpdateAccount, error) {
 	if to == "" || from == "" {
 		return nil, errResponses.ErrInvalidUpdateParameters
 	}
@@ -26,6 +27,7 @@ func NewUpdateAccount(to, from string, tType entity.TransactionType, amount floa
 	return &UpdateAccount{
 		at:                at,
 		to:                to,
+		currency:          currency,
 		from:              from,
 		tType:             tType,
 		transactionAmount: amount,
@@ -46,4 +48,12 @@ func (u *UpdateAccount) TransactionType() string {
 
 func (u *UpdateAccount) Amount() float64 {
 	return u.transactionAmount
+}
+
+func (u *UpdateAccount) Currency() string {
+	return u.currency
+}
+
+func (u *UpdateAccount) At() time.Time {
+	return u.at
 }

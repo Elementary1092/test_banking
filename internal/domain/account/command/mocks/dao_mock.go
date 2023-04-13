@@ -36,6 +36,20 @@ func (m *MockWriteDAO) EXPECT() *MockWriteDAOMockRecorder {
 	return m.recorder
 }
 
+// AddTransaction mocks base method.
+func (m *MockWriteDAO) AddTransaction(ctx context.Context, updateReq *model.UpdateAccount, t entity.AppAccount) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddTransaction", ctx, updateReq, t)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddTransaction indicates an expected call of AddTransaction.
+func (mr *MockWriteDAOMockRecorder) AddTransaction(ctx, updateReq, t interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddTransaction", reflect.TypeOf((*MockWriteDAO)(nil).AddTransaction), ctx, updateReq, t)
+}
+
 // CreateAccount mocks base method.
 func (m *MockWriteDAO) CreateAccount(ctx context.Context, account *model.Account) error {
 	m.ctrl.T.Helper()
@@ -63,18 +77,4 @@ func (m *MockWriteDAO) FindAccount(ctx context.Context, params map[string]string
 func (mr *MockWriteDAOMockRecorder) FindAccount(ctx, params interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAccount", reflect.TypeOf((*MockWriteDAO)(nil).FindAccount), ctx, params)
-}
-
-// UpdateAccount mocks base method.
-func (m *MockWriteDAO) UpdateAccount(ctx context.Context, updateReq *model.UpdateAccount, t entity.AppAccount) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAccount", ctx, updateReq, t)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateAccount indicates an expected call of UpdateAccount.
-func (mr *MockWriteDAOMockRecorder) UpdateAccount(ctx, updateReq, t interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockWriteDAO)(nil).UpdateAccount), ctx, updateReq, t)
 }

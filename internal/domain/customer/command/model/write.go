@@ -11,8 +11,8 @@ var (
 )
 
 type WriteModel struct {
-	user      *entity.User
 	createdAt time.Time
+	user      *entity.User
 }
 
 func NewWriteModel(customerID, email, password string, createdAt time.Time) (*WriteModel, error) {
@@ -44,4 +44,8 @@ func (c *WriteModel) Email() string {
 
 func (c *WriteModel) Password() string {
 	return c.user.Password
+}
+
+func (c *WriteModel) CreatedAt() time.Time {
+	return c.createdAt
 }

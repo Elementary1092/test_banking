@@ -5,6 +5,7 @@ import (
 	"github.com/Elementary1092/test_banking/internal/domain/account/command"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command/errResponses"
 	"github.com/Elementary1092/test_banking/internal/domain/account/command/model"
+	"time"
 )
 
 type Handler struct {
@@ -27,7 +28,13 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 		return errResponses.NewInternal("account/command/create.Handle", err)
 	}
 
-	account, err := model.NewWriteAccount(accountNumber, cmd.Currency, cmd.UserID, 0, nil)
+	account, err := model.NewWriteAccount(
+		accountNumber,
+		cmd.Currency,
+		cmd.UserID,
+		0,
+		nil,
+		time.Now())
 	if err != nil {
 		return err
 	}

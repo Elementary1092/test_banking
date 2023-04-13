@@ -21,5 +21,5 @@ func NewHandler(repo query.ReadDAO) *Handler {
 }
 
 func (h *Handler) Handle(ctx context.Context, qry Query) (*model.Account, error) {
-	return h.repo.FindTransactions(ctx, qry.AccountNumber)
+	return h.repo.FindTransactions(ctx, qry.AccountNumber, qry.Limit, qry.Offset)
 }
