@@ -64,3 +64,18 @@ func (mr *MockReadDAOMockRecorder) FindTransactions(ctx, accountNumber, limit, o
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindTransactions", reflect.TypeOf((*MockReadDAO)(nil).FindTransactions), ctx, accountNumber, limit, offset)
 }
+
+// ListAccounts mocks base method.
+func (m *MockReadDAO) ListAccounts(ctx context.Context, params map[string]string, limit, offset uint64) ([]*model.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAccounts", ctx, params, limit, offset)
+	ret0, _ := ret[0].([]*model.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAccounts indicates an expected call of ListAccounts.
+func (mr *MockReadDAOMockRecorder) ListAccounts(ctx, params, limit, offset interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccounts", reflect.TypeOf((*MockReadDAO)(nil).ListAccounts), ctx, params, limit, offset)
+}

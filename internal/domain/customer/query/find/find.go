@@ -11,7 +11,7 @@ type Handler struct {
 	repo query.ReadDAO
 }
 
-func NewFindHandler(repo query.ReadDAO) *Handler {
+func NewHandler(repo query.ReadDAO) *Handler {
 	if repo == nil {
 		panic("customer read dao is nil")
 	}

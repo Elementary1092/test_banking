@@ -15,3 +15,6 @@
 
 # Go workspace file
 go.work
+
+# File where app parameters may be specified
+.env

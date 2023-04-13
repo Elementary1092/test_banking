@@ -21,7 +21,7 @@ func TestHandlerHandle(t *testing.T) {
 	controller := gomock.NewController(t)
 	mockWriteDAO := mocks.NewMockWriteDAO(controller)
 
-	handler := NewCreateCustomerHandler(mockWriteDAO)
+	handler := NewHandler(mockWriteDAO)
 
 	testParams := []struct {
 		cmd Customer

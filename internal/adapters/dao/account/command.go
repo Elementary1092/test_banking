@@ -106,13 +106,16 @@ func (c *CommandDAO) AddTransaction(ctx context.Context, updateReq *model.Update
 	decreaseBalance := fmt.Sprintf(decreaseBalanceFmt, c.accountTableName)
 	addTransaction := fmt.Sprintf(addTransactionFmt, c.transactionTableName)
 
-	tx := c.db.Begin(ctx)
+	tx, err := c.db.Begin(ctx)
+	if err != nil {
+		return dao.ResolveError(err)
+	}
 	// According to the documentation it is safe to call even if transaction will be committed successfully.
 	// Also, assuming that rollback will not fail.
 	defer tx.Rollback(ctx)
 
 	// Here result does not matter
-	_, err := tx.Exec(
+	_, err = tx.Exec(
 		ctx,
 		addTransaction,
 		updateReq.From(),
