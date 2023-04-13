@@ -18,12 +18,6 @@ type CreateAccountRequest struct {
 	Currency Currency `json:"currency"`
 }
 
-// CreateAccountResponse defines model for CreateAccountResponse.
-type CreateAccountResponse struct {
-	AccountNumber *string   `json:"account_number,omitempty"`
-	Currency      *Currency `json:"currency,omitempty"`
-}
-
 // Currency defines model for Currency.
 type Currency = interface{}
 

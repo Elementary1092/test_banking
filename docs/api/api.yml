@@ -111,12 +111,8 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAccountRequest'
       responses:
-        '200':
+        '201':
           description: Created account successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateAccountResponse'
         default:
           description: unexpected error
           content:
@@ -351,14 +347,6 @@ components:
       required:
         - currency
       properties:
-        currency:
-          $ref: '#/components/schemas/Currency'
-
-    CreateAccountResponse:
-      type: object
-      properties:
-        account_number:
-          type: string
         currency:
           $ref: '#/components/schemas/Currency'
 
