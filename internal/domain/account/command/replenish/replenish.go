@@ -29,6 +29,7 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 	}
 
 	toAccount, err := h.repo.FindAccount(ctx, map[string]string{
+		"user_id":        cmd.UserID,
 		"account_number": cmd.AccountNumber,
 	})
 	if err != nil {

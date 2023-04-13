@@ -28,6 +28,7 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 		return errResponses.ErrInvalidTransactionAmount
 	}
 	fromAccount, err := h.repo.FindAccount(ctx, map[string]string{
+		"user_id":        cmd.UserID,
 		"account_number": cmd.From,
 	})
 	if err != nil {

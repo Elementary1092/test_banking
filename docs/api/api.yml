@@ -1,0 +1,399 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: test-banking
+  description: Test task implementation
+servers:
+  - url: https://{hostname}/api
+    variables:
+      hostname:
+        default: localhost
+
+paths:
+  /api/customer/refresh-token:
+    post:
+      operationId: refresh-token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Successfully generated token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/customer:
+    get:
+      security:
+        - bearerAuth: []
+      operationId: customerInfo
+      responses:
+        '200':
+          description: Successfully retrieved customer data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          description: Unauthorized
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/customer/signup:
+    post:
+      operationId: customerSignUp
+      requestBody:
+        description: Customer provides email and password to register
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+
+      responses:
+        '201':
+          description: Registered successfully
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/customer/signin:
+    post:
+      operationId: customerSignIn
+      requestBody:
+        description: Customer provides email and password to sign in
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: Signed in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/customer/accounts:
+    post:
+#      security:
+#        - bearerAuth: []
+      operationId: accountCreate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        '201':
+          description: Created account successfully
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+#      security:
+#        - bearerAuth: []
+      operationId: CustomerAccounts
+      responses:
+        '200':
+          description: Successfully retrieved user accounts
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/GetAccountResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/customer/accounts/{account_number}:
+    get:
+#      security:
+#        - bearerAuth: []
+      operationId: accountGet
+      parameters:
+        - in: path
+          name: account_number
+          schema:
+            type: string
+          required: true
+          description: account number which should be retrieved
+      responses:
+        '200':
+          description: Retrieved account info successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccountResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/customer/accounts/{account_number}/replenish:
+    post:
+#      security:
+#        - bearerAuth: []
+      operationId: accountReplenish
+      parameters:
+        - in: path
+          name: account_number
+          schema:
+            type: string
+          required: true
+          description: account number which should be replenished
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplenishRequest'
+      responses:
+        '204':
+          description: Successfully replenished
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/customer/accounts/{account_number}/withdraw:
+    post:
+#      security:
+#        - bearerAuth: []
+      operationId: accountWithdraw
+      parameters:
+        - in: path
+          name: account_number
+          schema:
+            type: string
+          required: true
+          description: account number from which withdraw should happen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+      responses:
+        '204':
+          description: Successful withdraw
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/customer/accounts/{account_number}/transfer:
+    post:
+#      security:
+#        - bearerAuth: []
+      operationId: accountTransfer
+      parameters:
+        - in: path
+          name: account_number
+          schema:
+            type: string
+          required: true
+          description: account number from which transfer should happen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '200':
+          description: Successful transfer
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Currency:
+      enum:
+        - "UZS"
+        - "USD"
+        - "EUR"
+    SignUpRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          pattern: "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$"
+          example: "example@email.com"
+        password:
+          description: A password should be at least 8 characters long only with numbers and letters
+          type: string
+          pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
+
+    SignInRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          pattern: "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$"
+          example: "example@email.com"
+        password:
+          description: A password should be at least 8 characters long only with numbers and letters
+          type: string
+          pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          type: string
+
+    SignInResponse:
+      type: object
+      properties:
+        id_token:
+          type: string
+        refresh_token:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - slug
+        - message
+      properties:
+        slug:
+          type: string
+        message:
+          type: string
+
+    Customer:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        email:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ReplenishRequest:
+      type: object
+      required:
+        - from_card
+        - currency
+        - amount
+      properties:
+        from_card:
+          type: string
+          pattern: "^\\d{16}$"
+          example: "8600123456789123"
+        currency:
+          $ref: '#/components/schemas/Currency'
+        amount:
+          type: number
+          format: double
+          minimum: 0
+
+    WithdrawRequest:
+      type: object
+      required:
+        - to_card
+        - amount
+      properties:
+        to_card:
+          type: string
+          pattern: "^\\d{16}$"
+          example: "8600123456789123"
+        amount:
+          type: number
+          format: double
+          minimum: 0
+
+    CreateAccountRequest:
+      type: object
+      required:
+        - currency
+      properties:
+        currency:
+          $ref: '#/components/schemas/Currency'
+
+    TransferRequest:
+      type: object
+      required:
+        - to_account
+        - amount
+      properties:
+        to_account:
+          type: string
+        amount:
+          type: number
+          format: double
+          minimum: 0
+
+    GetAccountResponse:
+      type: object
+      properties:
+        account_number:
+          type: string
+        customer_id:
+          type: string
+          format: uuid
+        balance:
+          type: number
+          format: double
+          minimum: 0
+        currency:
+          $ref: '#/components/schemas/Currency'

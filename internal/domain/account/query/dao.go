@@ -8,5 +8,7 @@ import (
 type ReadDAO interface {
 	// FindAccount should be able to search by 2 parameters: "account_number" and "user_id"
 	FindAccount(ctx context.Context, params map[string]string) (*model.Account, error)
+	// ListAccounts should be able to search by: "user_id"
+	ListAccounts(ctx context.Context, params map[string]string, limit, offset uint64) ([]*model.Account, error)
 	FindTransactions(ctx context.Context, accountNumber string, limit, offset uint64) (*model.Account, error)
 }
