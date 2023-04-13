@@ -142,6 +142,7 @@ func (q *QueryDAO) ListAccounts(ctx context.Context, params map[string]string, l
 	if err != nil {
 		return nil, dao.ResolveError(err)
 	}
+	defer rows.Close()
 
 	res := make([]*model.Account, 0)
 	for rows.Next() {

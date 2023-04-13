@@ -19,12 +19,16 @@ import (
 	customerFind "github.com/Elementary1092/test_banking/internal/domain/customer/query/find"
 	"github.com/Elementary1092/test_banking/internal/domain/token"
 	"github.com/Elementary1092/test_banking/pkg/postgresql"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 type Application struct {
 	Account  AccountActions
 	Customer CustomerActions
 	TokenMgr *token.Handler // tokens manager
+
+	// database client
+	client *pgxpool.Pool
 }
 
 type AccountActions struct {
@@ -109,5 +113,11 @@ func NewApplication(config internal.Config) Application {
 			config.TokenGen.Issuer,
 			config.TokenGen.Secret,
 		),
+
+		client: client,
 	}
+}
+
+func (a Application) Close() {
+	a.client.Close()
 }
