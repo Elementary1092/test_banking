@@ -23,7 +23,7 @@ type Handler struct {
 	refreshExpiration time.Duration
 	idExpiration      time.Duration
 	issuer            string
-	secret            string
+	secret            []byte
 }
 
 func NewHandler(
@@ -34,12 +34,14 @@ func NewHandler(
 		panic("repo is nil in token.NewHandler()")
 	}
 
+	key := []byte(secret)
+
 	return &Handler{
 		repo:              repo,
 		refreshExpiration: refreshExpiration,
 		idExpiration:      idExpiration,
 		issuer:            issuer,
-		secret:            secret,
+		secret:            key,
 	}
 }
 

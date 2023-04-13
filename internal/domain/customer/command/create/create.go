@@ -13,7 +13,7 @@ type Handler struct {
 	repo command.WriteDAO
 }
 
-func NewCreateCustomerHandler(customerRepo command.WriteDAO) *Handler {
+func NewHandler(customerRepo command.WriteDAO) *Handler {
 	if customerRepo == nil {
 		panic("customer write dao is nil")
 	}

@@ -88,7 +88,7 @@ func RetrieveUserID(ctx context.Context) (string, error) {
 func tokenFromHeader(r *http.Request) string {
 	fromHeader := r.Header.Get("Authorization")
 
-	if len(fromHeader) < 8 || strings.ToLower(fromHeader[:6]) != "bearer" {
+	if len(fromHeader) < 7 || strings.ToLower(fromHeader[:6]) != "bearer" {
 		return ""
 	}
 

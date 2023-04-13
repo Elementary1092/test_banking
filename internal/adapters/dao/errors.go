@@ -71,11 +71,9 @@ func ResolveError(err error) error {
 		return ErrInvalidEmpty{columnName: pgErr.ColumnName}
 
 	case "23503", "P0002": // FOREIGN KEY violation, NO DATA FOUND
-		// TODO add data parsing from pgErr.Details
 		return ErrNotFound{data: "some data"}
 
 	case "23505":
-		// TODO add data parsing from pgErr.Details
 		return ErrDuplicate{data: "data"}
 
 	default:

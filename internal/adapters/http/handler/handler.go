@@ -1,9 +1,10 @@
 package handler
 
 import (
+	"github.com/Elementary1092/test_banking/internal"
 	api "github.com/Elementary1092/test_banking/internal/adapters/http"
 	"github.com/Elementary1092/test_banking/internal/adapters/http/httperr"
-	"github.com/Elementary1092/test_banking/internal/adapters/http/middleware"
+	httpMiddleware "github.com/Elementary1092/test_banking/internal/adapters/http/middleware"
 	"github.com/Elementary1092/test_banking/internal/app"
 	accountCreate "github.com/Elementary1092/test_banking/internal/domain/account/command/create"
 	accountReplenish "github.com/Elementary1092/test_banking/internal/domain/account/command/replenish"
@@ -14,6 +15,9 @@ import (
 	customerCreate "github.com/Elementary1092/test_banking/internal/domain/customer/command/create"
 	customerAuth "github.com/Elementary1092/test_banking/internal/domain/customer/query/auth"
 	customerFind "github.com/Elementary1092/test_banking/internal/domain/customer/query/find"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/json-iterator/go"
 	"net/http"
 )
@@ -21,17 +25,77 @@ import (
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type HttpHandler struct {
-	app *app.Application
+	Router http.Handler
+	app    *app.Application
 }
 
-func NewHandler(app *app.Application) *HttpHandler {
-	if app == nil {
+func NewHandler(application *app.Application, config internal.Config) *HttpHandler {
+	if application == nil {
 		panic("application is nil in http/handler.NewHandler")
 	}
 
-	return &HttpHandler{
-		app: app,
+	httpHandler := &HttpHandler{
+		app: application,
 	}
+
+	r := chi.NewRouter()
+
+	if r == nil {
+		r = chi.NewRouter()
+	}
+
+	errHandlerFunc := func(w http.ResponseWriter, r *http.Request, err error) {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+	wrapper := api.ServerInterfaceWrapper{
+		Handler:          httpHandler,
+		ErrorHandlerFunc: errHandlerFunc,
+	}
+
+	r.Use(middleware.NoCache)
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	addCorsMiddleware(r)
+
+	jwtMiddleware := httpMiddleware.JWTMiddleware{
+		Secret: config.TokenGen.Secret,
+	}
+
+	r.Group(func(r chi.Router) {
+		r.Use(jwtMiddleware.Middleware)
+
+		r.Get("/customer", wrapper.CustomerInfo)
+		r.Get("/customer/accounts", wrapper.CustomerAccounts)
+		r.Post("/customer/accounts", wrapper.AccountCreate)
+		r.Get("/customer/accounts/{account_number}", wrapper.AccountGet)
+		r.Post("/customer/accounts/{account_number}/replenish", wrapper.AccountReplenish)
+		r.Post("/customer/accounts/{account_number}/transfer", wrapper.AccountTransfer)
+		r.Post("/customer/accounts/{account_number}/withdraw", wrapper.AccountWithdraw)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post("/customer/refresh-token", wrapper.RefreshToken)
+		r.Post("/customer/signin", wrapper.CustomerSignIn)
+		r.Post("/customer/signup", wrapper.CustomerSignUp)
+	})
+
+	r.Mount("/api", r)
+
+	httpHandler.Router = r
+
+	return httpHandler
+}
+
+func addCorsMiddleware(router *chi.Mux) {
+	corsMiddleware := cors.New(cors.Options{
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	})
+	router.Use(corsMiddleware.Handler)
 }
 
 func (h *HttpHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +168,7 @@ func (h *HttpHandler) CustomerSignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *HttpHandler) CustomerInfo(w http.ResponseWriter, r *http.Request) {
-	userID, err := middleware.RetrieveUserID(r.Context())
+	userID, err := httpMiddleware.RetrieveUserID(r.Context())
 	if err != nil {
 		httperr.WrapError(w, err)
 		return
@@ -125,7 +189,7 @@ func (h *HttpHandler) CustomerInfo(w http.ResponseWriter, r *http.Request) {
 
 func (h *HttpHandler) AccountCreate(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	userID, err := middleware.RetrieveUserID(ctx)
+	userID, err := httpMiddleware.RetrieveUserID(ctx)
 	if err != nil {
 		httperr.WrapError(w, err)
 		return
@@ -138,14 +202,9 @@ func (h *HttpHandler) AccountCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currency, err := RetrieveCurrency(request.Currency)
-	if err != nil {
-		httperr.BadRequest(w, "invalid-currency")
-		return
-	}
 	cmd := accountCreate.Command{
 		UserID:   userID,
-		Currency: currency,
+		Currency: request.Currency,
 	}
 	if err := h.app.Account.Commands.Create.Handle(ctx, cmd); err != nil {
 		httperr.WrapError(w, err)
@@ -161,15 +220,15 @@ func (h *HttpHandler) AccountGet(
 	accountNumber string,
 ) {
 	ctx := r.Context()
-	userID, err := middleware.RetrieveUserID(ctx)
+	userID, err := httpMiddleware.RetrieveUserID(ctx)
 	if err != nil {
 		httperr.WrapError(w, err)
 		return
 	}
 
 	query := accountFind.Query{
-		AccountNumber: userID,
-		UserID:        accountNumber,
+		AccountNumber: accountNumber,
+		UserID:        userID,
 	}
 	account, err := h.app.Account.Queries.Find.Handle(ctx, query)
 	if err != nil {
@@ -182,7 +241,7 @@ func (h *HttpHandler) AccountGet(
 
 func (h *HttpHandler) CustomerAccounts(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	userID, err := middleware.RetrieveUserID(ctx)
+	userID, err := httpMiddleware.RetrieveUserID(ctx)
 	if err != nil {
 		httperr.WrapError(w, err)
 		return
@@ -215,7 +274,7 @@ func (h *HttpHandler) AccountReplenish(
 	accountNumber string,
 ) {
 	ctx := r.Context()
-	userID, err := middleware.RetrieveUserID(ctx)
+	userID, err := httpMiddleware.RetrieveUserID(ctx)
 	if err != nil {
 		httperr.WrapError(w, err)
 		return
@@ -228,16 +287,11 @@ func (h *HttpHandler) AccountReplenish(
 		return
 	}
 
-	currency, err := RetrieveCurrency(request.Currency)
-	if err != nil {
-		httperr.BadRequest(w, "invalid-currency")
-		return
-	}
 	cmd := accountReplenish.Command{
 		AccountNumber: accountNumber,
 		FromCard:      request.FromCard,
 		Amount:        request.Amount,
-		Currency:      currency,
+		Currency:      request.Currency,
 		UserID:        userID,
 	}
 	if err = h.app.Account.Commands.Replenish.Handle(ctx, cmd); err != nil {
@@ -254,7 +308,7 @@ func (h *HttpHandler) AccountTransfer(
 	accountNumber string,
 ) {
 	ctx := r.Context()
-	userID, err := middleware.RetrieveUserID(ctx)
+	userID, err := httpMiddleware.RetrieveUserID(ctx)
 	if err != nil {
 		httperr.WrapError(w, err)
 		return
@@ -287,7 +341,7 @@ func (h *HttpHandler) AccountWithdraw(
 	accountNumber string,
 ) {
 	ctx := r.Context()
-	userID, err := middleware.RetrieveUserID(ctx)
+	userID, err := httpMiddleware.RetrieveUserID(ctx)
 	if err != nil {
 		httperr.WrapError(w, err)
 		return

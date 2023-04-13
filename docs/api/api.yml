@@ -4,13 +4,13 @@ info:
   title: test-banking
   description: Test task implementation
 servers:
-  - url: https://{hostname}/api
+  - url: http://{hostname}/api
     variables:
       hostname:
         default: localhost
 
 paths:
-  /api/customer/refresh-token:
+  /customer/refresh-token:
     post:
       operationId: refresh-token
       requestBody:
@@ -26,6 +26,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SignInResponse'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -33,7 +45,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer:
+  /customer:
     get:
       security:
         - bearerAuth: []
@@ -47,6 +59,18 @@ paths:
                 $ref: '#/components/schemas/Customer'
         '401':
           description: Unauthorized
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -54,7 +78,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/signup:
+  /customer/signup:
     post:
       operationId: customerSignUp
       requestBody:
@@ -68,6 +92,18 @@ paths:
       responses:
         '201':
           description: Registered successfully
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -75,7 +111,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/signin:
+  /customer/signin:
     post:
       operationId: customerSignIn
       requestBody:
@@ -92,6 +128,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SignInResponse'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -99,10 +147,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts:
+  /customer/accounts:
     post:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountCreate
       requestBody:
         required: true
@@ -113,6 +161,20 @@ paths:
       responses:
         '201':
           description: Created account successfully
+        '401':
+          description: Unauthorized
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -120,8 +182,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     get:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: CustomerAccounts
       responses:
         '200':
@@ -131,6 +193,20 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/GetAccountResponse'
+        '401':
+          description: Unauthorized
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -138,10 +214,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/{account_number}:
+  /customer/accounts/{account_number}:
     get:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountGet
       parameters:
         - in: path
@@ -157,6 +233,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetAccountResponse'
+        '401':
+          description: Unauthorized
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -164,10 +254,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/{account_number}/replenish:
+  /customer/accounts/{account_number}/replenish:
     post:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountReplenish
       parameters:
         - in: path
@@ -185,6 +275,20 @@ paths:
       responses:
         '204':
           description: Successfully replenished
+        '401':
+          description: Unauthorized
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -192,10 +296,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/{account_number}/withdraw:
+  /customer/accounts/{account_number}/withdraw:
     post:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountWithdraw
       parameters:
         - in: path
@@ -213,6 +317,20 @@ paths:
       responses:
         '204':
           description: Successful withdraw
+        '401':
+          description: Unauthorized
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -220,10 +338,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/{account_number}/transfer:
+  /customer/accounts/{account_number}/transfer:
     post:
-#      security:
-#        - bearerAuth: []
+      security:
+        - bearerAuth: []
       operationId: accountTransfer
       parameters:
         - in: path
@@ -241,6 +359,20 @@ paths:
       responses:
         '200':
           description: Successful transfer
+        '401':
+          description: Unauthorized
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
@@ -255,11 +387,6 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    Currency:
-      enum:
-        - "UZS"
-        - "USD"
-        - "EUR"
     SignUpRequest:
       type: object
       required:
@@ -341,7 +468,7 @@ components:
           pattern: "^\\d{16}$"
           example: "8600123456789123"
         currency:
-          $ref: '#/components/schemas/Currency'
+          type: string
         amount:
           type: number
           format: double
@@ -368,7 +495,7 @@ components:
         - currency
       properties:
         currency:
-          $ref: '#/components/schemas/Currency'
+          type: string
 
     TransferRequest:
       type: object
@@ -396,4 +523,4 @@ components:
           format: double
           minimum: 0
         currency:
-          $ref: '#/components/schemas/Currency'
+          type: string

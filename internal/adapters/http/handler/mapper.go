@@ -33,22 +33,12 @@ func MapSignInResponse(idToken, refreshToken string) api.SignInResponse {
 }
 
 func MapAccountRead(account *accountRead.Account) api.GetAccountResponse {
-	var currency any = account.Info.Currency
 	userID := uuid.MustParse(account.UserID)
 
 	return api.GetAccountResponse{
 		AccountNumber: &account.Info.Number,
 		Balance:       &account.Info.Balance,
-		Currency:      &currency,
+		Currency:      &account.Info.Currency,
 		CustomerId:    &userID,
 	}
-}
-
-func RetrieveCurrency(cur api.Currency) (string, error) {
-	val, ok := cur.(string)
-	if !ok {
-		return "", ErrInvalidCurrency
-	}
-
-	return val, nil
 }

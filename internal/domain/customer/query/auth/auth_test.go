@@ -21,7 +21,7 @@ func TestAuthCustomer(t *testing.T) {
 	controller := gomock.NewController(t)
 	mockReadDAO := mocks.NewMockReadDAO(controller)
 
-	finder := NewAuthHandler(mockReadDAO)
+	finder := NewHandler(mockReadDAO)
 	tests := map[Query]struct {
 		err      error
 		customer *model.Customer

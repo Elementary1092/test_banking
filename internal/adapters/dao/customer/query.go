@@ -35,12 +35,12 @@ func (q *QueryDAO) FindCustomer(ctx context.Context, filter map[string]string) (
 			if whereClause.Len() != 0 {
 				whereClause.WriteString(" AND ")
 			}
-			whereClause.WriteString(fmt.Sprintf(`"%s"" = %s`, key, value))
+			whereClause.WriteString(fmt.Sprintf(`"%s" = '%s'::uuid`, key, value))
 		case "email":
 			if whereClause.Len() != 0 {
 				whereClause.WriteString(" AND ")
 			}
-			whereClause.WriteString(fmt.Sprintf(`"%s"" = %s`, key, value))
+			whereClause.WriteString(fmt.Sprintf(`"%s" = '%s'`, key, value))
 		}
 	}
 

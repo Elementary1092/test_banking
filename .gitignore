@@ -7,6 +7,8 @@
 *.so
 *.dylib
 
+build/
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -15,3 +17,6 @@
 
 # Go workspace file
 go.work
+
+# File where app parameters may be specified
+.env

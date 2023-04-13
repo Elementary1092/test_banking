@@ -347,7 +347,7 @@ func NewCustomerInfoRequest(server string) (*http.Request, error) {
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer")
+	operationPath := fmt.Sprintf("/customer")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -374,7 +374,7 @@ func NewCustomerAccountsRequest(server string) (*http.Request, error) {
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts")
+	operationPath := fmt.Sprintf("/customer/accounts")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -412,7 +412,7 @@ func NewAccountCreateRequestWithBody(server string, contentType string, body io.
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts")
+	operationPath := fmt.Sprintf("/customer/accounts")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -448,7 +448,7 @@ func NewAccountGetRequest(server string, accountNumber string) (*http.Request, e
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/%s", pathParam0)
+	operationPath := fmt.Sprintf("/customer/accounts/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -493,7 +493,7 @@ func NewAccountReplenishRequestWithBody(server string, accountNumber string, con
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/%s/replenish", pathParam0)
+	operationPath := fmt.Sprintf("/customer/accounts/%s/replenish", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -540,7 +540,7 @@ func NewAccountTransferRequestWithBody(server string, accountNumber string, cont
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/%s/transfer", pathParam0)
+	operationPath := fmt.Sprintf("/customer/accounts/%s/transfer", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -587,7 +587,7 @@ func NewAccountWithdrawRequestWithBody(server string, accountNumber string, cont
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/%s/withdraw", pathParam0)
+	operationPath := fmt.Sprintf("/customer/accounts/%s/withdraw", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -627,7 +627,7 @@ func NewRefreshTokenRequestWithBody(server string, contentType string, body io.R
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/refresh-token")
+	operationPath := fmt.Sprintf("/customer/refresh-token")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -667,7 +667,7 @@ func NewCustomerSignInRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/signin")
+	operationPath := fmt.Sprintf("/customer/signin")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -707,7 +707,7 @@ func NewCustomerSignUpRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/signup")
+	operationPath := fmt.Sprintf("/customer/signup")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -819,6 +819,8 @@ type CustomerInfoResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Customer
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -842,6 +844,8 @@ type CustomerAccountsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *interface{}
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -864,6 +868,8 @@ func (r CustomerAccountsResponse) StatusCode() int {
 type AccountCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -887,6 +893,8 @@ type AccountGetResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *GetAccountResponse
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -909,6 +917,8 @@ func (r AccountGetResponse) StatusCode() int {
 type AccountReplenishResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -931,6 +941,8 @@ func (r AccountReplenishResponse) StatusCode() int {
 type AccountTransferResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -953,6 +965,8 @@ func (r AccountTransferResponse) StatusCode() int {
 type AccountWithdrawResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -976,6 +990,8 @@ type RefreshTokenResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *SignInResponse
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -999,6 +1015,8 @@ type CustomerSignInResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *SignInResponse
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -1021,6 +1039,8 @@ func (r CustomerSignInResponse) StatusCode() int {
 type CustomerSignUpResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON400      *Error
+	JSON500      *Error
 	JSONDefault  *Error
 }
 
@@ -1207,6 +1227,20 @@ func ParseCustomerInfoResponse(rsp *http.Response) (*CustomerInfoResponse, error
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -1240,6 +1274,20 @@ func ParseCustomerAccountsResponse(rsp *http.Response) (*CustomerAccountsRespons
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -1266,6 +1314,20 @@ func ParseAccountCreateResponse(rsp *http.Response) (*AccountCreateResponse, err
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -1299,6 +1361,20 @@ func ParseAccountGetResponse(rsp *http.Response) (*AccountGetResponse, error) {
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -1325,6 +1401,20 @@ func ParseAccountReplenishResponse(rsp *http.Response) (*AccountReplenishRespons
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -1351,6 +1441,20 @@ func ParseAccountTransferResponse(rsp *http.Response) (*AccountTransferResponse,
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -1377,6 +1481,20 @@ func ParseAccountWithdrawResponse(rsp *http.Response) (*AccountWithdrawResponse,
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -1409,6 +1527,20 @@ func ParseRefreshTokenResponse(rsp *http.Response) (*RefreshTokenResponse, error
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -1443,6 +1575,20 @@ func ParseCustomerSignInResponse(rsp *http.Response) (*CustomerSignInResponse, e
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -1469,6 +1615,20 @@ func ParseCustomerSignUpResponse(rsp *http.Response) (*CustomerSignUpResponse, e
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {

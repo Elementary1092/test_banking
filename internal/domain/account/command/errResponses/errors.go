@@ -19,21 +19,21 @@ var (
 	ErrInvalidRecipientCurrency = errors.New("recipient's account currency is different")
 )
 
-type errInternalError struct {
+type errInternal struct {
 	failMsg string
 	wrapped error
 }
 
-func (e *errInternalError) Error() string {
+func (e *errInternal) Error() string {
 	return fmt.Sprintf("Failed on %s. Actual error: %v", e.failMsg, e.wrapped)
 }
 
-func (e *errInternalError) Unwrap() error {
+func (e *errInternal) Unwrap() error {
 	return e.wrapped
 }
 
 func NewInternal(opDesc string, err error) error {
-	return &errInternalError{
+	return &errInternal{
 		failMsg: opDesc,
 		wrapped: err,
 	}
