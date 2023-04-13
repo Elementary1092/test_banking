@@ -19,8 +19,8 @@ func WrapError(w http.ResponseWriter, err error) {
 	}
 
 	encoder := json.NewEncoder(w)
-	encoder.Encode(resp)
 	w.WriteHeader(http.StatusBadRequest)
+	encoder.Encode(resp)
 }
 
 func Unauthorized(w http.ResponseWriter, slug string) {
@@ -30,8 +30,8 @@ func Unauthorized(w http.ResponseWriter, slug string) {
 	}
 
 	encoder := json.NewEncoder(w)
-	encoder.Encode(resp)
 	w.WriteHeader(http.StatusUnauthorized)
+	encoder.Encode(resp)
 }
 
 func InternalError(w http.ResponseWriter, slug string) {
@@ -41,8 +41,8 @@ func InternalError(w http.ResponseWriter, slug string) {
 	}
 
 	encoder := json.NewEncoder(w)
-	encoder.Encode(resp)
 	w.WriteHeader(http.StatusInternalServerError)
+	encoder.Encode(resp)
 }
 
 func BadRequest(w http.ResponseWriter, slug string) {
@@ -52,6 +52,6 @@ func BadRequest(w http.ResponseWriter, slug string) {
 	}
 
 	encoder := json.NewEncoder(w)
-	encoder.Encode(resp)
 	w.WriteHeader(http.StatusBadRequest)
+	encoder.Encode(resp)
 }
