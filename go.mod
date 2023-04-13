@@ -3,16 +3,19 @@ module github.com/Elementary1092/test_banking
 go 1.19
 
 require (
+	github.com/deepmap/oapi-codegen v1.12.4
+	github.com/go-chi/chi v1.5.4
+	github.com/go-chi/chi/v5 v5.0.8
+	github.com/golang-jwt/jwt/v5 v5.0.0-rc.2
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
+	github.com/jackc/pgconn v1.14.0
 	github.com/jackc/pgx/v4 v4.18.1
 	golang.org/x/crypto v0.8.0
 )
 
 require (
-	github.com/golang-jwt/jwt/v5 v5.0.0-rc.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.14.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.3.2 // indirect
