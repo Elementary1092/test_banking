@@ -37,7 +37,7 @@ type Error struct {
 // GetAccountResponse defines model for GetAccountResponse.
 type GetAccountResponse struct {
 	AccountNumber *string             `json:"account_number,omitempty"`
-	Balance       *float32            `json:"balance,omitempty"`
+	Balance       *float64            `json:"balance,omitempty"`
 	Currency      *Currency           `json:"currency,omitempty"`
 	CustomerId    *openapi_types.UUID `json:"customer_id,omitempty"`
 }
@@ -49,7 +49,7 @@ type RefreshTokenRequest struct {
 
 // ReplenishRequest defines model for ReplenishRequest.
 type ReplenishRequest struct {
-	Amount   float32  `json:"amount"`
+	Amount   float64  `json:"amount"`
 	Currency Currency `json:"currency"`
 	FromCard string   `json:"from_card"`
 }
@@ -78,13 +78,13 @@ type SignUpRequest struct {
 
 // TransferRequest defines model for TransferRequest.
 type TransferRequest struct {
-	Amount float32 `json:"amount"`
+	Amount float64 `json:"amount"`
 	ToCard *string `json:"to_card,omitempty"`
 }
 
 // WithdrawRequest defines model for WithdrawRequest.
 type WithdrawRequest struct {
-	Amount float32 `json:"amount"`
+	Amount float64 `json:"amount"`
 	ToCard string  `json:"to_card"`
 }
 

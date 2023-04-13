@@ -326,6 +326,7 @@ components:
           $ref: '#/components/schemas/Currency'
         amount:
           type: number
+          format: double
           minimum: 0
 
     WithdrawRequest:
@@ -340,6 +341,7 @@ components:
           example: "8600123456789123"
         amount:
           type: number
+          format: double
           minimum: 0
 
     CreateAccountRequest:
@@ -360,6 +362,7 @@ components:
           type: string
         amount:
           type: number
+          format: double
           minimum: 0
 
     GetAccountResponse:
@@ -372,6 +375,7 @@ components:
           format: uuid
         balance:
           type: number
+          format: double
           minimum: 0
         currency:
           $ref: '#/components/schemas/Currency'
