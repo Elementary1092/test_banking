@@ -29,21 +29,18 @@ func (q *QueryDAO) FindCustomer(ctx context.Context, filter map[string]string) (
 	query := fmt.Sprintf(queryFmt, q.customerTableName)
 
 	var whereClause strings.Builder
-	var params = make([]any, 0)
 	for key, value := range filter {
 		switch key {
 		case "uuid":
 			if whereClause.Len() != 0 {
 				whereClause.WriteString(" AND ")
 			}
-			whereClause.WriteString(fmt.Sprintf(`"%s" = $%d`, key, len(params)+1))
-			params = append(params, value)
+			whereClause.WriteString(fmt.Sprintf(`"%s" = '%s'::uuid`, key, value))
 		case "email":
 			if whereClause.Len() != 0 {
 				whereClause.WriteString(" AND ")
 			}
-			whereClause.WriteString(fmt.Sprintf(`"%s" = $%d`, key, len(params)+1))
-			params = append(params, value)
+			whereClause.WriteString(fmt.Sprintf(`"%s" = '%s'`, key, value))
 		}
 	}
 
@@ -52,7 +49,7 @@ func (q *QueryDAO) FindCustomer(ctx context.Context, filter map[string]string) (
 	}
 
 	var customer customerModel
-	if err := q.db.QueryRow(ctx, query, params...).Scan(
+	if err := q.db.QueryRow(ctx, query).Scan(
 		&customer.UUID,
 		&customer.Email,
 		&customer.Password,

@@ -227,8 +227,8 @@ func (h *HttpHandler) AccountGet(
 	}
 
 	query := accountFind.Query{
-		AccountNumber: userID,
-		UserID:        accountNumber,
+		AccountNumber: accountNumber,
+		UserID:        userID,
 	}
 	account, err := h.app.Account.Queries.Find.Handle(ctx, query)
 	if err != nil {

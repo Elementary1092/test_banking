@@ -37,12 +37,12 @@ func (q *QueryDAO) FindAccount(ctx context.Context, params map[string]string) (*
 			if whereClause.Len() != 0 {
 				whereClause.WriteString(" AND ")
 			}
-			whereClause.WriteString(fmt.Sprintf("%s = %s", key, value))
+			whereClause.WriteString(fmt.Sprintf(`"number" = '%s'`, value))
 		case "user_id":
 			if whereClause.Len() != 0 {
 				whereClause.WriteString(" AND ")
 			}
-			whereClause.WriteString(fmt.Sprintf("%s = %s", key, value))
+			whereClause.WriteString(fmt.Sprintf(`"customer_id" = '%s'::uuid`, value))
 		}
 	}
 
@@ -121,12 +121,12 @@ func (q *QueryDAO) ListAccounts(ctx context.Context, params map[string]string, l
 			if whereClause.Len() != 0 {
 				whereClause.WriteString(" AND ")
 			}
-			whereClause.WriteString(fmt.Sprintf("%s = %s", key, value))
+			whereClause.WriteString(fmt.Sprintf(`"number" = '%s''`, value))
 		case "user_id":
 			if whereClause.Len() != 0 {
 				whereClause.WriteString(" AND ")
 			}
-			whereClause.WriteString(fmt.Sprintf("%s = %s", key, value))
+			whereClause.WriteString(fmt.Sprintf(`"customer_id" = '%s'::uuid`, value))
 		}
 	}
 
