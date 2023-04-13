@@ -1,6 +1,8 @@
 PROJ_DIR=$(PWD)
 BUILD_DIR=$(PROJ_DIR)/_build
-MAIN_FILE=$(PROJ_DIR)/cmd/main.go
+MAIN_FILE=cmd/main.go
+
+include .env
 
 .PHONY: mocks_gen
 mocks_gen:
@@ -16,3 +18,7 @@ mocks_gen:
 .PHONY: api_gen
 api_gen:
 	@./scripts/openapi-gen.sh api internal/adapters/http api
+
+.PHONY: run
+run:
+	go run $(MAIN_FILE)
