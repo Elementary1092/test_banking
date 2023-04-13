@@ -99,7 +99,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/create:
+  /api/customer/accounts:
     post:
 #      security:
 #        - bearerAuth: []
@@ -113,6 +113,24 @@ paths:
       responses:
         '201':
           description: Created account successfully
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+#      security:
+#        - bearerAuth: []
+      operationId: CustomerAccounts
+      responses:
+        '200':
+          description: Successfully retrieved user accounts
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/GetAccountResponse'
         default:
           description: unexpected error
           content:

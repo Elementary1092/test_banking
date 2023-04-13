@@ -18,7 +18,10 @@ type ServerInterface interface {
 	// (GET /api/customer)
 	CustomerInfo(w http.ResponseWriter, r *http.Request)
 
-	// (POST /api/customer/accounts/create)
+	// (GET /api/customer/accounts)
+	CustomerAccounts(w http.ResponseWriter, r *http.Request)
+
+	// (POST /api/customer/accounts)
 	AccountCreate(w http.ResponseWriter, r *http.Request)
 
 	// (GET /api/customer/accounts/{account_number})
@@ -60,6 +63,21 @@ func (siw *ServerInterfaceWrapper) CustomerInfo(w http.ResponseWriter, r *http.R
 
 	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.CustomerInfo(w, r)
+	})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// CustomerAccounts operation middleware
+func (siw *ServerInterfaceWrapper) CustomerAccounts(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var handler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CustomerAccounts(w, r)
 	})
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -350,7 +368,10 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Get(options.BaseURL+"/api/customer", wrapper.CustomerInfo)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/api/customer/accounts/create", wrapper.AccountCreate)
+		r.Get(options.BaseURL+"/api/customer/accounts", wrapper.CustomerAccounts)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/api/customer/accounts", wrapper.AccountCreate)
 	})
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/api/customer/accounts/{account_number}", wrapper.AccountGet)

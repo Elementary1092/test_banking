@@ -92,6 +92,9 @@ type ClientInterface interface {
 	// CustomerInfo request
 	CustomerInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CustomerAccounts request
+	CustomerAccounts(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// AccountCreate request with any body
 	AccountCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -133,6 +136,18 @@ type ClientInterface interface {
 
 func (c *Client) CustomerInfo(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCustomerInfoRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CustomerAccounts(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCustomerAccountsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -350,6 +365,33 @@ func NewCustomerInfoRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewCustomerAccountsRequest generates requests for CustomerAccounts
+func NewCustomerAccountsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/customer/accounts")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewAccountCreateRequest calls the generic AccountCreate builder with application/json body
 func NewAccountCreateRequest(server string, body AccountCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -370,7 +412,7 @@ func NewAccountCreateRequestWithBody(server string, contentType string, body io.
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/create")
+	operationPath := fmt.Sprintf("/api/customer/accounts")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -731,6 +773,9 @@ type ClientWithResponsesInterface interface {
 	// CustomerInfo request
 	CustomerInfoWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CustomerInfoResponse, error)
 
+	// CustomerAccounts request
+	CustomerAccountsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CustomerAccountsResponse, error)
+
 	// AccountCreate request with any body
 	AccountCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AccountCreateResponse, error)
 
@@ -787,6 +832,29 @@ func (r CustomerInfoResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CustomerInfoResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CustomerAccountsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *interface{}
+	JSONDefault  *Error
+}
+
+// Status returns HTTPResponse.Status
+func (r CustomerAccountsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CustomerAccountsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -981,6 +1049,15 @@ func (c *ClientWithResponses) CustomerInfoWithResponse(ctx context.Context, reqE
 	return ParseCustomerInfoResponse(rsp)
 }
 
+// CustomerAccountsWithResponse request returning *CustomerAccountsResponse
+func (c *ClientWithResponses) CustomerAccountsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CustomerAccountsResponse, error) {
+	rsp, err := c.CustomerAccounts(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCustomerAccountsResponse(rsp)
+}
+
 // AccountCreateWithBodyWithResponse request with arbitrary body returning *AccountCreateResponse
 func (c *ClientWithResponses) AccountCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AccountCreateResponse, error) {
 	rsp, err := c.AccountCreateWithBody(ctx, contentType, body, reqEditors...)
@@ -1125,6 +1202,39 @@ func ParseCustomerInfoResponse(rsp *http.Response) (*CustomerInfoResponse, error
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest Customer
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCustomerAccountsResponse parses an HTTP response from a CustomerAccountsWithResponse call
+func ParseCustomerAccountsResponse(rsp *http.Response) (*CustomerAccountsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CustomerAccountsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest interface{}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
