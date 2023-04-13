@@ -11,7 +11,7 @@ type WriteDAO interface {
 	FindAccount(ctx context.Context, params map[string]string) (*model.Account, error)
 
 	CreateAccount(ctx context.Context, account *model.Account) error
-	// UpdateAccount should make update according to update type in 1 transaction
+	// AddTransaction should make update according to update type in 1 transaction
 	// Only Balance is updatable.
-	UpdateAccount(ctx context.Context, updateReq *model.UpdateAccount, t entity.AppAccount) error
+	AddTransaction(ctx context.Context, updateReq *model.UpdateAccount, t entity.AppAccount) error
 }

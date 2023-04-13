@@ -35,9 +35,9 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 		return err
 	}
 
-	// Logically may be currency
+	// Logically, may be, currency
 	// should have been taken from command and compared with account's currency,
-	// but for this app I think it is not critical
+	// but for this app I think it is not critical.
 	updateModel, err := model.NewUpdateAccount(
 		cmd.AccountNumber,
 		cmd.FromCard,
@@ -49,5 +49,5 @@ func (h *Handler) Handle(ctx context.Context, cmd Command) error {
 		return err
 	}
 
-	return h.repo.UpdateAccount(ctx, updateModel, entity.ToAccount)
+	return h.repo.AddTransaction(ctx, updateModel, entity.ToAccount)
 }

@@ -94,7 +94,7 @@ func (c *CommandDAO) CreateAccount(ctx context.Context, account *model.Account) 
 	return nil
 }
 
-func (c *CommandDAO) UpdateAccount(ctx context.Context, updateReq *model.UpdateAccount, t entity.AppAccount) error {
+func (c *CommandDAO) AddTransaction(ctx context.Context, updateReq *model.UpdateAccount, t entity.AppAccount) error {
 	// Not a good design decision to transfer logic of balance increase and decrease to dao
 	// but did not figure out other method to do this in one transaction without violating CQRS pattern
 	const increaseBalanceFmt = `UPDATE %s SET "balance" = "balance" + $2 WHERE "number" = $1`
