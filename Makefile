@@ -30,3 +30,11 @@ run:
 .PHONY: build
 build:
 	CGO_ENABLED=0 GOOS=linux go build -o $(BUILD_DIR)/app $(MAIN_FILE)
+
+.PHONY: build_container
+build_container:
+	docker build --no-cache --tag test-app .
+
+.PHONY: run_container
+run_container:
+	docker run --env-file ./.env test-app

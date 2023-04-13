@@ -11,6 +11,7 @@ import (
 
 // entry point
 func main() {
+	// works only in local environment
 	godotenv.Load(".env")
 
 	config := internal.Parse()
