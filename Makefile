@@ -29,4 +29,4 @@ run:
 
 .PHONY: build
 build:
-	go build -o $(BUILD_DIR)/app $(MAIN_FILE)
+	CGO_ENABLED=0 GOOS=linux go build -o $(BUILD_DIR)/app $(MAIN_FILE)
