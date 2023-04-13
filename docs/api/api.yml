@@ -358,7 +358,7 @@ components:
         - to_account
         - amount
       properties:
-        to_card:
+        to_account:
           type: string
         amount:
           type: number

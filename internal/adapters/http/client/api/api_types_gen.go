@@ -78,8 +78,8 @@ type SignUpRequest struct {
 
 // TransferRequest defines model for TransferRequest.
 type TransferRequest struct {
-	Amount float64 `json:"amount"`
-	ToCard *string `json:"to_card,omitempty"`
+	Amount    float64 `json:"amount"`
+	ToAccount string  `json:"to_account"`
 }
 
 // WithdrawRequest defines model for WithdrawRequest.
