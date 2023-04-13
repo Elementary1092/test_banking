@@ -4,7 +4,7 @@ info:
   title: test-banking
   description: Test task implementation
 servers:
-  - url: https://{hostname}/api
+  - url: http://{hostname}/api
     variables:
       hostname:
         default: localhost
@@ -255,11 +255,6 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    Currency:
-      enum:
-        - "UZS"
-        - "USD"
-        - "EUR"
     SignUpRequest:
       type: object
       required:
@@ -341,7 +336,7 @@ components:
           pattern: "^\\d{16}$"
           example: "8600123456789123"
         currency:
-          $ref: '#/components/schemas/Currency'
+          type: string
         amount:
           type: number
           format: double
@@ -368,7 +363,7 @@ components:
         - currency
       properties:
         currency:
-          $ref: '#/components/schemas/Currency'
+          type: string
 
     TransferRequest:
       type: object
@@ -396,4 +391,4 @@ components:
           format: double
           minimum: 0
         currency:
-          $ref: '#/components/schemas/Currency'
+          type: string

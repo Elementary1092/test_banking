@@ -15,11 +15,8 @@ const (
 
 // CreateAccountRequest defines model for CreateAccountRequest.
 type CreateAccountRequest struct {
-	Currency Currency `json:"currency"`
+	Currency string `json:"currency"`
 }
-
-// Currency defines model for Currency.
-type Currency = interface{}
 
 // Customer defines model for Customer.
 type Customer struct {
@@ -38,7 +35,7 @@ type Error struct {
 type GetAccountResponse struct {
 	AccountNumber *string             `json:"account_number,omitempty"`
 	Balance       *float64            `json:"balance,omitempty"`
-	Currency      *Currency           `json:"currency,omitempty"`
+	Currency      *string             `json:"currency,omitempty"`
 	CustomerId    *openapi_types.UUID `json:"customer_id,omitempty"`
 }
 
@@ -49,9 +46,9 @@ type RefreshTokenRequest struct {
 
 // ReplenishRequest defines model for ReplenishRequest.
 type ReplenishRequest struct {
-	Amount   float64  `json:"amount"`
-	Currency Currency `json:"currency"`
-	FromCard string   `json:"from_card"`
+	Amount   float64 `json:"amount"`
+	Currency string  `json:"currency"`
+	FromCard string  `json:"from_card"`
 }
 
 // SignInRequest defines model for SignInRequest.

@@ -19,6 +19,10 @@ mocks_gen:
 api_gen:
 	@./scripts/openapi-gen.sh api internal/adapters/http api
 
+.PHONY: api_swagger
+api_swagger:
+	docker run -d -t -i -p 8246:8080 -e SWAGGER_JSON=/api.yml -v $(PROJ_DIR)/docs/api/api.yml:/api.yml swaggerapi/swagger-ui
+
 .PHONY: run
 run:
 	go run $(MAIN_FILE)

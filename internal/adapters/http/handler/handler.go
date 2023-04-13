@@ -138,14 +138,9 @@ func (h *HttpHandler) AccountCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currency, err := RetrieveCurrency(request.Currency)
-	if err != nil {
-		httperr.BadRequest(w, "invalid-currency")
-		return
-	}
 	cmd := accountCreate.Command{
 		UserID:   userID,
-		Currency: currency,
+		Currency: request.Currency,
 	}
 	if err := h.app.Account.Commands.Create.Handle(ctx, cmd); err != nil {
 		httperr.WrapError(w, err)
@@ -228,16 +223,11 @@ func (h *HttpHandler) AccountReplenish(
 		return
 	}
 
-	currency, err := RetrieveCurrency(request.Currency)
-	if err != nil {
-		httperr.BadRequest(w, "invalid-currency")
-		return
-	}
 	cmd := accountReplenish.Command{
 		AccountNumber: accountNumber,
 		FromCard:      request.FromCard,
 		Amount:        request.Amount,
-		Currency:      currency,
+		Currency:      request.Currency,
 		UserID:        userID,
 	}
 	if err = h.app.Account.Commands.Replenish.Handle(ctx, cmd); err != nil {
