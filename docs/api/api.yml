@@ -10,7 +10,7 @@ servers:
         default: localhost
 
 paths:
-  /api/customer/refresh-token:
+  /customer/refresh-token:
     post:
       operationId: refresh-token
       requestBody:
@@ -33,7 +33,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer:
+  /customer:
     get:
       security:
         - bearerAuth: []
@@ -54,7 +54,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/signup:
+  /customer/signup:
     post:
       operationId: customerSignUp
       requestBody:
@@ -75,7 +75,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/signin:
+  /customer/signin:
     post:
       operationId: customerSignIn
       requestBody:
@@ -99,7 +99,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts:
+  /customer/accounts:
     post:
 #      security:
 #        - bearerAuth: []
@@ -138,7 +138,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/{account_number}:
+  /customer/accounts/{account_number}:
     get:
 #      security:
 #        - bearerAuth: []
@@ -164,7 +164,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/{account_number}/replenish:
+  /customer/accounts/{account_number}/replenish:
     post:
 #      security:
 #        - bearerAuth: []
@@ -192,7 +192,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/{account_number}/withdraw:
+  /customer/accounts/{account_number}/withdraw:
     post:
 #      security:
 #        - bearerAuth: []
@@ -220,7 +220,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /api/customer/accounts/{account_number}/transfer:
+  /customer/accounts/{account_number}/transfer:
     post:
 #      security:
 #        - bearerAuth: []

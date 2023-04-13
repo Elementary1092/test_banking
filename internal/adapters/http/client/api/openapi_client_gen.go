@@ -347,7 +347,7 @@ func NewCustomerInfoRequest(server string) (*http.Request, error) {
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer")
+	operationPath := fmt.Sprintf("/customer")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -374,7 +374,7 @@ func NewCustomerAccountsRequest(server string) (*http.Request, error) {
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts")
+	operationPath := fmt.Sprintf("/customer/accounts")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -412,7 +412,7 @@ func NewAccountCreateRequestWithBody(server string, contentType string, body io.
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts")
+	operationPath := fmt.Sprintf("/customer/accounts")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -448,7 +448,7 @@ func NewAccountGetRequest(server string, accountNumber string) (*http.Request, e
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/%s", pathParam0)
+	operationPath := fmt.Sprintf("/customer/accounts/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -493,7 +493,7 @@ func NewAccountReplenishRequestWithBody(server string, accountNumber string, con
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/%s/replenish", pathParam0)
+	operationPath := fmt.Sprintf("/customer/accounts/%s/replenish", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -540,7 +540,7 @@ func NewAccountTransferRequestWithBody(server string, accountNumber string, cont
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/%s/transfer", pathParam0)
+	operationPath := fmt.Sprintf("/customer/accounts/%s/transfer", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -587,7 +587,7 @@ func NewAccountWithdrawRequestWithBody(server string, accountNumber string, cont
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/accounts/%s/withdraw", pathParam0)
+	operationPath := fmt.Sprintf("/customer/accounts/%s/withdraw", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -627,7 +627,7 @@ func NewRefreshTokenRequestWithBody(server string, contentType string, body io.R
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/refresh-token")
+	operationPath := fmt.Sprintf("/customer/refresh-token")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -667,7 +667,7 @@ func NewCustomerSignInRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/signin")
+	operationPath := fmt.Sprintf("/customer/signin")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -707,7 +707,7 @@ func NewCustomerSignUpRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/customer/signup")
+	operationPath := fmt.Sprintf("/customer/signup")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}

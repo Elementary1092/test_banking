@@ -63,7 +63,7 @@ type CustomerQueries struct {
 	Find *customerFind.Handler
 }
 
-func NewApplication(config internal.Config) Application {
+func NewApplication(config internal.Config) *Application {
 	dbConfig := postgresql.Config{
 		Username:    config.DB.Username,
 		Password:    config.DB.Password,
@@ -83,7 +83,7 @@ func NewApplication(config internal.Config) Application {
 	customerQueryDAO := customerDao.NewQueryDAO(client)
 	tokenMgrDAO := tokenDao.NewDAO(client)
 
-	return Application{
+	return &Application{
 		Account: AccountActions{
 			Commands: AccountCommands{
 				Create:    accountCreate.NewCreateHandler(accountCommandDAO),
@@ -118,6 +118,6 @@ func NewApplication(config internal.Config) Application {
 	}
 }
 
-func (a Application) Close() {
+func (a *Application) Close() {
 	a.client.Close()
 }

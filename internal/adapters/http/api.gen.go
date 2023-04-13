@@ -15,34 +15,34 @@ import (
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
-	// (GET /api/customer)
+	// (GET /customer)
 	CustomerInfo(w http.ResponseWriter, r *http.Request)
 
-	// (GET /api/customer/accounts)
+	// (GET /customer/accounts)
 	CustomerAccounts(w http.ResponseWriter, r *http.Request)
 
-	// (POST /api/customer/accounts)
+	// (POST /customer/accounts)
 	AccountCreate(w http.ResponseWriter, r *http.Request)
 
-	// (GET /api/customer/accounts/{account_number})
+	// (GET /customer/accounts/{account_number})
 	AccountGet(w http.ResponseWriter, r *http.Request, accountNumber string)
 
-	// (POST /api/customer/accounts/{account_number}/replenish)
+	// (POST /customer/accounts/{account_number}/replenish)
 	AccountReplenish(w http.ResponseWriter, r *http.Request, accountNumber string)
 
-	// (POST /api/customer/accounts/{account_number}/transfer)
+	// (POST /customer/accounts/{account_number}/transfer)
 	AccountTransfer(w http.ResponseWriter, r *http.Request, accountNumber string)
 
-	// (POST /api/customer/accounts/{account_number}/withdraw)
+	// (POST /customer/accounts/{account_number}/withdraw)
 	AccountWithdraw(w http.ResponseWriter, r *http.Request, accountNumber string)
 
-	// (POST /api/customer/refresh-token)
+	// (POST /customer/refresh-token)
 	RefreshToken(w http.ResponseWriter, r *http.Request)
 
-	// (POST /api/customer/signin)
+	// (POST /customer/signin)
 	CustomerSignIn(w http.ResponseWriter, r *http.Request)
 
-	// (POST /api/customer/signup)
+	// (POST /customer/signup)
 	CustomerSignUp(w http.ResponseWriter, r *http.Request)
 }
 
@@ -365,34 +365,34 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	}
 
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/api/customer", wrapper.CustomerInfo)
+		r.Get(options.BaseURL+"/customer", wrapper.CustomerInfo)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/api/customer/accounts", wrapper.CustomerAccounts)
+		r.Get(options.BaseURL+"/customer/accounts", wrapper.CustomerAccounts)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/api/customer/accounts", wrapper.AccountCreate)
+		r.Post(options.BaseURL+"/customer/accounts", wrapper.AccountCreate)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/api/customer/accounts/{account_number}", wrapper.AccountGet)
+		r.Get(options.BaseURL+"/customer/accounts/{account_number}", wrapper.AccountGet)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/api/customer/accounts/{account_number}/replenish", wrapper.AccountReplenish)
+		r.Post(options.BaseURL+"/customer/accounts/{account_number}/replenish", wrapper.AccountReplenish)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/api/customer/accounts/{account_number}/transfer", wrapper.AccountTransfer)
+		r.Post(options.BaseURL+"/customer/accounts/{account_number}/transfer", wrapper.AccountTransfer)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/api/customer/accounts/{account_number}/withdraw", wrapper.AccountWithdraw)
+		r.Post(options.BaseURL+"/customer/accounts/{account_number}/withdraw", wrapper.AccountWithdraw)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/api/customer/refresh-token", wrapper.RefreshToken)
+		r.Post(options.BaseURL+"/customer/refresh-token", wrapper.RefreshToken)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/api/customer/signin", wrapper.CustomerSignIn)
+		r.Post(options.BaseURL+"/customer/signin", wrapper.CustomerSignIn)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/api/customer/signup", wrapper.CustomerSignUp)
+		r.Post(options.BaseURL+"/customer/signup", wrapper.CustomerSignUp)
 	})
 
 	return r
