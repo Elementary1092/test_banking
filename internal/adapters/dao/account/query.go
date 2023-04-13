@@ -75,13 +75,14 @@ func (q *QueryDAO) FindTransactions(ctx context.Context, accountNumber string, l
 	}
 
 	const queryFmt = `SELECT "id", "from", "to", "type", "currency", "amount", "created_at" 
-		FROM %s WHERE "to"=$1 OR "from"=$1 LIMIT %d OFFSET %d`
+		FROM %s WHERE "to"=$1 OR "from"=$1`
 	query := fmt.Sprintf(
 		queryFmt,
 		q.transactionTableName,
-		limit,
-		offset,
 	)
+	if limit != 0 {
+		query = fmt.Sprintf("%s LIMIT %d OFFSET %d", query, limit, offset)
+	}
 
 	rows, err := q.db.Query(ctx, query, accountNumber)
 	if err != nil {
@@ -107,4 +108,58 @@ func (q *QueryDAO) FindTransactions(ctx context.Context, accountNumber string, l
 	}
 
 	return account, nil
+}
+
+func (q *QueryDAO) ListAccounts(ctx context.Context, params map[string]string, limit, offset uint64) ([]*model.Account, error) {
+	const queryFmt = `SELECT "number", "customer_id", "currency", "balance", "created_at" FROM %s `
+	query := fmt.Sprintf(queryFmt, q.accountTableName)
+
+	var whereClause strings.Builder
+	for key, value := range params {
+		switch key {
+		case "account_number":
+			if whereClause.Len() != 0 {
+				whereClause.WriteString(" AND ")
+			}
+			whereClause.WriteString(fmt.Sprintf("%s = %s", key, value))
+		case "user_id":
+			if whereClause.Len() != 0 {
+				whereClause.WriteString(" AND ")
+			}
+			whereClause.WriteString(fmt.Sprintf("%s = %s", key, value))
+		}
+	}
+
+	if whereClause.Len() != 0 {
+		query = fmt.Sprintf("%s WHERE %s", query, whereClause.String())
+	}
+
+	if limit != 0 {
+		query = fmt.Sprintf("%s LIMIT %d OFFSET %d", query, limit, offset)
+	}
+
+	rows, err := q.db.Query(ctx, query)
+	if err != nil {
+		return nil, dao.ResolveError(err)
+	}
+
+	res := make([]*model.Account, 0)
+	for rows.Next() {
+		var account accountModel
+		if err = rows.Scan(
+			&account.Number,
+			&account.UserID,
+			&account.Currency,
+			&account.Balance,
+			&account.CreatedAt,
+		); err != nil {
+			return nil, dao.ResolveError(err)
+		}
+
+		response := account.MapToReadModel()
+
+		res = append(res, response)
+	}
+
+	return res, nil
 }
