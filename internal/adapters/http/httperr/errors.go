@@ -40,6 +40,7 @@ func WrapError(w http.ResponseWriter, err error) {
 		resp.Slug = "invalid-balance"
 	} else if errors.Is(err, dao.ErrDuplicate{}) {
 		resp.Slug = "duplicate-data"
+		resp.Status = http.StatusConflict
 	} else if errors.Is(err, dao.ErrInvalidEmpty{}) {
 		resp.Slug = "missing-required-data"
 	} else if errors.Is(err, dao.ErrNotFound{}) {
