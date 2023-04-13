@@ -21,7 +21,7 @@ func TestFindCustomer(t *testing.T) {
 	mockReadDAO := mocks.NewMockReadDAO(controller)
 
 	finder := NewFindHandler(mockReadDAO)
-	tests := map[*model.Customer]struct {
+	tests := map[Query]struct {
 		err      error
 		customer *model.Customer
 	}{}
@@ -29,7 +29,9 @@ func TestFindCustomer(t *testing.T) {
 	createTime := time.Now().Truncate(10 * time.Minute)
 	expectedCustomer := model.NewCustomer("user_id", "some_email", "", createTime)
 
-	customerWithEmail := model.NewCustomer("", "some_email", "", time.Now())
+	customerWithEmail := Query{
+		Email: "some_email",
+	}
 	customerWithEmailResponse := model.NewCustomer("user_id", "some_email", "", createTime)
 	tests[customerWithEmail] = struct {
 		err      error
@@ -39,7 +41,9 @@ func TestFindCustomer(t *testing.T) {
 		customer: customerWithEmailResponse,
 	}
 
-	customerWithUUID := model.NewCustomer("user_id", "", "", time.Now())
+	customerWithUUID := Query{
+		UUID: "user_id",
+	}
 	customerWithUUIDResponse := model.NewCustomer("user_id", "some_email", "", createTime)
 	tests[customerWithUUID] = struct {
 		err      error
@@ -83,21 +87,7 @@ func TestFindCustomer(t *testing.T) {
 		}).
 		Times(2) // will be called <number positive results> times
 
-	for param, result := range tests {
-		queryParams := make(map[string]string, 2)
-
-		if param.UUID() != "" {
-			queryParams["uuid"] = param.UUID()
-		}
-
-		if param.Email() != "" {
-			queryParams["email"] = param.Email()
-		}
-
-		query := Query{
-			Params: queryParams,
-		}
-
+	for query, result := range tests {
 		customer, err := finder.Handle(context.Background(), query)
 		if !errors.Is(err, result.err) {
 			t.Errorf("exptected error: %v; got: %v", result.err, err)
