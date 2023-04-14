@@ -40,10 +40,6 @@ func NewHandler(application *app.Application, config internal.Config) *HttpHandl
 
 	r := chi.NewRouter()
 
-	if r == nil {
-		r = chi.NewRouter()
-	}
-
 	errHandlerFunc := func(w http.ResponseWriter, r *http.Request, err error) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
@@ -53,8 +49,6 @@ func NewHandler(application *app.Application, config internal.Config) *HttpHandl
 	}
 
 	r.Use(middleware.NoCache)
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	addCorsMiddleware(r)
