@@ -38,6 +38,8 @@ func NewClient(ctx context.Context, config Config) (pool *pgxpool.Pool, err erro
 		if err == nil {
 			break
 		}
+
+		time.Sleep(5 * time.Second)
 	}
 
 	return
