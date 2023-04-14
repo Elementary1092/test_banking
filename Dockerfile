@@ -14,7 +14,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-COPY .env Makefile ./
 RUN make build
 
 FROM alpine:3.17.3
